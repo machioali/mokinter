@@ -36,6 +36,7 @@ interface User {
   name: string;
   email: string;
   id: string;
+  photoURL?: string; // ✅ Added for profile image support
 }
 
 interface InterviewCardProps {

@@ -21,6 +21,16 @@ interface SavedMessage {
   content: string;
 }
 
+interface AgentProps {
+  userName: string;
+  userId: string | undefined;
+  interviewId?: string;
+  feedbackId?: string;
+  type: "generate" | "feedback"; // Adjust union as needed
+  questions?: string[];
+  profileImage?: string; // Added profileImage prop
+}
+
 const Agent = ({
   userName,
   userId,
@@ -28,6 +38,7 @@ const Agent = ({
   feedbackId,
   type,
   questions,
+  profileImage, // now available here
 }: AgentProps) => {
   const router = useRouter();
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
@@ -167,7 +178,7 @@ const Agent = ({
         <div className="card-border">
           <div className="card-content">
             <Image
-              src="/user-avatar.png"
+              src={profileImage || "/user-avatar.png"} // Use provided image or default
               alt="profile-image"
               width={539}
               height={539}
@@ -195,17 +206,16 @@ const Agent = ({
       )}
 
       <div className="w-full flex justify-center">
-        {callStatus !== "ACTIVE" ? (
+        {callStatus !== CallStatus.ACTIVE ? (
           <button className="relative btn-call" onClick={() => handleCall()}>
             <span
               className={cn(
                 "absolute animate-ping rounded-full opacity-75",
-                callStatus !== "CONNECTING" && "hidden"
+                callStatus !== CallStatus.CONNECTING && "hidden"
               )}
             />
-
             <span className="relative">
-              {callStatus === "INACTIVE" || callStatus === "FINISHED"
+              {callStatus === CallStatus.INACTIVE || callStatus === CallStatus.FINISHED
                 ? "Call"
                 : ". . ."}
             </span>
